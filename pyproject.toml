@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openplc_backend"
+version = "0.0.1"
+description = "Emit PLCopen XML / Structured Text for the OpenPLC runtime"
+readme = "README.md"
+license = { text = "GPL-3.0-or-later" }
+requires-python = ">=3.10"
+authors = [
+    { name = "iliana" },
+]
+keywords = ["plc", "openplc", "iec-61131-3", "structured-text", "plcopen"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+]
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["openplc_backend*"]
