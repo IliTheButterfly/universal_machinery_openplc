@@ -7,7 +7,7 @@ name = "openplc_backend"
 version = "0.0.1"
 description = "Emit PLCopen XML / Structured Text for the OpenPLC runtime"
 readme = "README.md"
-license = { text = "GPL-3.0-or-later" }
+license = { text = "AGPL-3.0-or-later" }
 requires-python = ">=3.10"
 authors = [
     { name = "iliana" },
@@ -15,7 +15,7 @@ authors = [
 keywords = ["plc", "openplc", "iec-61131-3", "structured-text", "plcopen"]
 classifiers = [
     "Development Status :: 1 - Planning",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
 ]
 dependencies = []
 

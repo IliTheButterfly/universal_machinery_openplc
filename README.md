@@ -1,6 +1,6 @@
 # openplc_backend
 
-Backend for [universal_machinery](https://github.com/iliana/universal_machinery) targeting the [OpenPLC runtime](https://openplcproject.com/).
+Backend for [universal_machinery](https://github.com/IliTheButterfly/universal_machinery) targeting the [OpenPLC runtime](https://openplcproject.com/).
 
 **Status: skeleton — emitter not yet written.**
 
@@ -15,4 +15,8 @@ OpenPLC accepts programs in PLCopen XML or Structured Text (IEC 61131-3 Part 3).
 
 ## License
 
-GPL-3.0-or-later, same as the parent project.
+AGPL-3.0-or-later, same as the parent project.
+See [`LICENSE`](LICENSE) for the full text.
+
+Contributions require a `Signed-off-by` line per the
+[Developer Certificate of Origin](https://developercertificate.org/).
