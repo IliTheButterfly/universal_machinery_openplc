@@ -16,7 +16,23 @@ jobs:
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout backend
+        uses: actions/checkout@v4
+        with:
+          path: backend
+
+      # The backend dispatches to ``universal_machinery``'s emitters
+      # / parsers, so we clone the parent project alongside and
+      # install it first.  Tracking the parent's ``dev`` branch
+      # matches the project's integration policy: submodule PRs go
+      # against parent dev, and dev is where the latest emitter
+      # fixes (matiec round-trip, AT-clause direct rep, etc.) land.
+      - name: Checkout universal_machinery (parent)
+        uses: actions/checkout@v4
+        with:
+          repository: IliTheButterfly/universal_machinery
+          ref: dev
+          path: universal_machinery
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -24,14 +40,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
-      - name: Install package
+      - name: Install parent + backend
         run: |
           python -m pip install --upgrade pip
-          pip install -e .
-          pip install pytest
+          pip install -e ./universal_machinery[dev]
+          pip install -e ./backend[dev]
 
       - name: Run pytest
-        # Skeleton smoke tests pin the public API shape.  Once the
-        # PLCopen XML / ST emitter lands, real round-trip tests will
-        # join them here.
-        run: pytest tests/ -q
+        # API-shape smoke tests + real round-trip tests (write+read
+        # via the universal_machinery emitters/parsers).
+        run: cd backend && pytest tests/ -q

@@ -14,10 +14,21 @@ authors = [
 ]
 keywords = ["plc", "openplc", "iec-61131-3", "structured-text", "plcopen"]
 classifiers = [
-    "Development Status :: 1 - Planning",
+    "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
 ]
-dependencies = []
+# ``universal_machinery`` is the parent vendor-neutral IL project that
+# owns the emitters / parsers this backend dispatches to.  Not on PyPI
+# yet; consume via the parent repo's submodule layout, or pip-install
+# from the parent's git URL alongside this package.
+dependencies = [
+    "universal_machinery",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+]
 
 [tool.setuptools.packages.find]
 where = ["."]
