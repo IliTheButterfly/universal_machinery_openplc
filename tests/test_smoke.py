@@ -167,17 +167,30 @@ def test_write_rejects_unknown_suffix(tmp_path):
         backend.write(_representative_program(), str(out))
 
 
-def test_read_st_not_yet_implemented(tmp_path):
-    """``.st`` parsing isn't wired yet (no full-program ST parser
-    upstream).  Raises ``NotImplementedError`` with a pointer to
-    the .xml workaround instead of silently returning an empty
-    Program."""
+def test_read_st_parses_via_parse_program(tmp_path):
+    """``.st`` parsing wired in via the parent's
+    ``parsers.st_text.parse_program`` (universal_machinery PR
+    #84).  Round-trip pinned: write ST, read it back, check the
+    POU set survives.
+
+    Limited to what ``parse_program`` v1 supports (no FB instance
+    types like TON, no AT clauses, no SFC) -- use a minimal LD
+    program with no FB references for the round-trip."""
     from openplc_backend import OpenPlcBackend
+    from universal_machinery.builders import (
+        coil, no, prog, program, rung, var,
+    )
+    from universal_machinery.il import TagType
     backend = OpenPlcBackend()
     out = tmp_path / "prog.st"
-    backend.write(_representative_program(), str(out))
-    with pytest.raises(NotImplementedError, match="ST"):
-        backend.read(str(out))
+    p = program(subroutines=[
+        prog("Main", main=True,
+             local_vars=[var("x", TagType.BOOL), var("y", TagType.BOOL)],
+             rungs=[rung(no("x"), coil("y"))]),
+    ])
+    backend.write(p, str(out))
+    parsed = backend.read(str(out))
+    assert sorted(s.name for s in parsed.subroutines) == ["Main"]
 
 
 def test_read_rejects_unknown_suffix(tmp_path):
