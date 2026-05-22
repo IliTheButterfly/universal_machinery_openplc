@@ -33,6 +33,7 @@ from universal_machinery.emitters.plcopen_xml import emit_xml
 from universal_machinery.emitters.st import emit_program
 from universal_machinery.il import Program
 from universal_machinery.parsers.plcopen_xml import parse_plcopen_xml_file
+from universal_machinery.parsers.st_text import parse_program
 
 
 @register("openplc")
@@ -95,34 +96,28 @@ class OpenPlcBackend(Backend):
     def read(self, path: str) -> Program:
         """Parse a file from ``path`` and return a Program.
 
-        ``.xml`` routes to the PLCopen TC6 XML reader, which is the
-        canonical round-trip path (XSD-validated, lossless for the
-        IL features the v2.01 schema covers).
+        Two paths supported:
 
-        ``.st`` is not yet supported on the read side: the parent
-        project has an ST expression / statement parser
-        (``universal_machinery.parsers.st_text``) but no full-program
-        ST parser that reconstructs ``Subroutine`` declarations
-        with their VAR blocks, ``CONFIGURATION`` / ``RESOURCE`` /
-        ``TASK`` blocks, and ``TYPE ... END_TYPE`` blocks.  Callers
-        wanting a round-trip should emit + re-read XML for now.
+          - ``.xml`` -> PLCopen TC6 XML reader.  Canonical
+            round-trip path (XSD-validated, lossless for the IL
+            features the v2.01 schema covers).
+          - ``.st``  -> ``parse_program`` (v1, added in
+            universal_machinery PR #84).  Covers PROGRAM /
+            FUNCTION / FUNCTION_BLOCK with VAR_INPUT /
+            VAR_OUTPUT / VAR_IN_OUT / VAR blocks + body.
+            VAR_EXTERNAL / VAR_TEMP / VAR_GLOBAL / AT clauses /
+            TYPE blocks / CONFIGURATION / OOP / SFC text raise
+            ``StParseError`` with a focused message -- round-
+            trip via .xml for those shapes.
         """
         p = Path(path)
         suffix = p.suffix.lower()
         if suffix == ".xml":
             return parse_plcopen_xml_file(p)
         elif suffix == ".st":
-            raise NotImplementedError(
-                "OpenPlcBackend.read: .st parsing not yet wired up.  "
-                "The parent project ships an ST statement parser at "
-                "``universal_machinery.parsers.st_text`` but no full-"
-                "program ST parser yet (no Subroutine / Configuration "
-                "/ TYPE block reconstruction).  Round-trip via .xml "
-                "(``backend.read(path.with_suffix('.xml'))``) until "
-                "the ST-program parser lands."
-            )
+            return parse_program(p.read_text(encoding="utf-8"))
         else:
             raise ValueError(
                 f"OpenPlcBackend.read: unsupported suffix {suffix!r} "
-                f"for {p}; expected .xml (or .st once parsing lands)"
+                f"for {p}; expected .st or .xml"
             )
