@@ -11,8 +11,9 @@ The lowering work itself happens upstream in
 that picks the right emitter / parser based on the file suffix and
 declares which IL capabilities OpenPLC's compiler accepts.  That
 keeps the IEC §3 ST emit and PLCopen XML emit shared with the
-parent project's matiec round-trip harness (32/32 cases pass against
-``iec2c``), so any matiec compatibility fix benefits OpenPLC
+parent project's matiec round-trip harness (49/49 cases pass against
+``iec2c`` -- 47 single-emit + 2 end-to-end ``emit→parse_program→
+re-emit``), so any matiec compatibility fix benefits OpenPLC
 automatically.
 
 Usage::
@@ -53,11 +54,13 @@ class OpenPlcBackend(Backend):
     name = "openplc"
     #: Capabilities that OpenPLC's compiler (matiec, IEC 2nd-edition)
     #: accepts via our ST / PLCopen XML emit.  Verified by the parent
-    #: project's ``tests/test_matiec_roundtrip.py`` (32/32 cases as
-    #: of the integration commit).  Notably absent: IEC 3rd-edition
-    #: OOP (METHOD / INTERFACE / EXTENDS) -- matiec rejects those
-    #: at the parser level (see ``docs/IEC_CONFORMANCE.md`` in
-    #: the parent for the doubly-blocked posture).
+    #: project's ``tests/test_matiec_roundtrip.py`` (49/49 cases
+    #: covering the IEC §2.5.2 stdlib families, IEC §2.7 configuration
+    #: model, SFC text bodies, and end-to-end ``emit→parse_program→
+    #: re-emit`` parser-faithfulness round-trips).  Notably absent:
+    #: IEC 3rd-edition OOP (METHOD / INTERFACE / EXTENDS) -- matiec
+    #: rejects those at the parser level (see ``docs/IEC_CONFORMANCE.md``
+    #: in the parent for the doubly-blocked posture).
     capabilities = frozenset({
         "ld",
         "st",

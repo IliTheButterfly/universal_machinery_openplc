@@ -39,9 +39,9 @@ backend = get_backend("openplc")
 | Parallel branches | yes |
 | IEC 3rd-edition OOP (METHOD / INTERFACE / EXTENDS) | no -- matiec rejects |
 | Standalone DATA_BLOCK declarations | no -- S7 / CLICK extension, not IEC |
-| Reading `.st` back into IL | yes (v1 -- PROGRAM/FUNCTION/FUNCTION_BLOCK + VAR_INPUT/OUTPUT/IN_OUT/VAR + body; no AT clauses / TYPE / CONFIGURATION / OOP / SFC text) |
+| Reading `.st` back into IL | yes (v6 -- PROGRAM / FUNCTION / FUNCTION_BLOCK + all 7 VAR_* directions + IEC §2.4.1.1 AT clauses + IEC §2.3.3 TYPE blocks + IEC §2.7 CONFIGURATION / RESOURCE / TASK + IEC §6.7 SFC text; only CLASS / class-level OOP remains out of scope) |
 
-The capability set tracks what OpenPLC's compiler (matiec) parser-accepts; verified by the parent's `tests/test_matiec_roundtrip.py` (32/32 cases).
+The capability set tracks what OpenPLC's compiler (matiec) parser-accepts; verified by the parent's `tests/test_matiec_roundtrip.py` (49/49 cases).
 
 ## Dependencies
 
