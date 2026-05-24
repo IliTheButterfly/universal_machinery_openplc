@@ -170,12 +170,13 @@ def test_write_rejects_unknown_suffix(tmp_path):
 def test_read_st_parses_via_parse_program(tmp_path):
     """``.st`` parsing wired in via the parent's
     ``parsers.st_text.parse_program`` (universal_machinery PR
-    #84).  Round-trip pinned: write ST, read it back, check the
-    POU set survives.
+    #84, now at v6).  Round-trip pinned: write ST, read it back,
+    check the POU set survives.
 
-    Limited to what ``parse_program`` v1 supports (no FB instance
-    types like TON, no AT clauses, no SFC) -- use a minimal LD
-    program with no FB references for the round-trip."""
+    A minimal LD program is enough for the round-trip; the
+    headline parse_program scope (all 7 VAR_* directions, AT
+    clauses, TYPE blocks, CONFIGURATION, OOP, SFC text) is
+    exercised by the parent project's ``parse_program`` tests."""
     from openplc_backend import OpenPlcBackend
     from universal_machinery.builders import (
         coil, no, prog, program, rung, var,

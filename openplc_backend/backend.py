@@ -104,14 +104,16 @@ class OpenPlcBackend(Backend):
           - ``.xml`` -> PLCopen TC6 XML reader.  Canonical
             round-trip path (XSD-validated, lossless for the IL
             features the v2.01 schema covers).
-          - ``.st``  -> ``parse_program`` (v1, added in
-            universal_machinery PR #84).  Covers PROGRAM /
-            FUNCTION / FUNCTION_BLOCK with VAR_INPUT /
-            VAR_OUTPUT / VAR_IN_OUT / VAR blocks + body.
-            VAR_EXTERNAL / VAR_TEMP / VAR_GLOBAL / AT clauses /
-            TYPE blocks / CONFIGURATION / OOP / SFC text raise
-            ``StParseError`` with a focused message -- round-
-            trip via .xml for those shapes.
+          - ``.st``  -> ``parse_program`` (currently v6 -- see
+            the parent project's docs/API_STABILITY.md).  Covers
+            PROGRAM / FUNCTION / FUNCTION_BLOCK with all 7 IEC
+            §2.4.3 VAR_* directions, IEC §2.4.1.1 AT clauses,
+            IEC §2.3.3 TYPE blocks, IEC §2.7 CONFIGURATION /
+            RESOURCE / TASK, IEC 3rd-edition OOP, IEC §6.7 SFC
+            text, and the body via the statement parser.  Only
+            CLASS / class-level OOP remains out of scope and
+            raises ``StParseError`` -- round-trip via .xml for
+            that shape.
         """
         p = Path(path)
         suffix = p.suffix.lower()
